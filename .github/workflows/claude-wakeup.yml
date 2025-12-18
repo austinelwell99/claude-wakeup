@@ -1,0 +1,44 @@
+name: Claude Wakeup
+
+on:
+  schedule:
+    # 6:05 AM US Central Standard Time (UTC-6) = 12:05 PM UTC
+    # Note: During Daylight Saving Time (March-November), this will run at 7:05 AM CDT
+    # To run at 6:05 AM CDT instead, change to: '5 11 * * *'
+    - cron: '5 12 * * *'
+
+  # Allows manual trigger for testing from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  wakeup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Claude API
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          echo "Starting Claude API ping at $(date -u) UTC"
+
+          response=$(curl -s -w "\n%{http_code}" https://api.anthropic.com/v1/messages \
+            -H "Content-Type: application/json" \
+            -H "x-api-key: $ANTHROPIC_API_KEY" \
+            -H "anthropic-version: 2023-06-01" \
+            -d '{
+              "model": "claude-sonnet-4-20250514",
+              "max_tokens": 10,
+              "messages": [{"role": "user", "content": "hi"}]
+            }')
+
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "HTTP Status: $http_code"
+          echo "Response: $body"
+
+          if [ "$http_code" -eq 200 ]; then
+            echo "Success! Claude API pinged successfully."
+          else
+            echo "Warning: Received non-200 status code"
+            exit 1
+          fi
