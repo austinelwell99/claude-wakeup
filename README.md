@@ -1,101 +1,44 @@
-# Claude Wakeup - Daily API Ping
+# Claude Wakeup
 
-Automatically pings the Claude API at 6:05 AM Central Time daily to start your 5-hour usage window.
+Automatically pings the Claude API at 6:05 AM Central Time daily to start your 5-hour usage window early.
 
-## Setup Instructions
+## Setup (2 minutes)
 
-### 1. Create a GitHub Repository
+### 1. Fork this repo
 
-1. Go to https://github.com/new
-2. Name it something like `claude-wakeup`
-3. Select **Private** (recommended, since this involves your API usage)
-4. Click **Create repository**
+Click the **Fork** button in the top right corner.
 
-### 2. Add Your Anthropic API Key as a Secret
+### 2. Add your Anthropic API key
 
-1. In your new repo, go to **Settings** (tab at the top)
-2. In the left sidebar, click **Secrets and variables** → **Actions**
+1. Get your API key from https://console.anthropic.com/settings/keys
+2. In your forked repo, go to **Settings** → **Secrets and variables** → **Actions**
 3. Click **New repository secret**
-4. Fill in:
-   - **Name:** `ANTHROPIC_API_KEY`
-   - **Secret:** Your Anthropic API key (starts with `sk-ant-...`)
-5. Click **Add secret**
+4. Name: `ANTHROPIC_API_KEY`
+5. Value: Your API key (starts with `sk-ant-...`)
+6. Click **Add secret**
 
-### 3. Upload the Workflow File
+### 3. Test it
 
-#### Option A: Using GitHub Web UI
+1. Go to the **Actions** tab
+2. Click **Claude Wakeup** in the left sidebar
+3. Click **Run workflow** → **Run workflow**
+4. Wait ~10 seconds, then click on the run to verify it succeeded
 
-1. In your repo, click **Add file** → **Create new file**
-2. In the filename field, type: `.github/workflows/claude-wakeup.yml`
-   - This will automatically create the folders
-3. Copy the entire contents of `.github/workflows/claude-wakeup.yml` from this folder
-4. Paste it into the editor
-5. Click **Commit changes**
+That's it. The workflow will now run automatically every day at 6:05 AM Central.
 
-#### Option B: Using Git Command Line
+## Viewing Logs
 
-From this folder (`claude-wakeup`), run:
+**Actions** tab → Click any workflow run → **wakeup** → **Ping Claude API**
 
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/claude-wakeup.git
-git push -u origin main
-```
+## Schedule
 
-### 4. Test It
+Runs daily at 6:05 AM US Central Time.
 
-1. Go to your repo on GitHub
-2. Click the **Actions** tab
-3. Click on **Claude Wakeup** in the left sidebar
-4. Click **Run workflow** → **Run workflow** (green button)
-5. Wait ~10 seconds, then click on the running workflow to see logs
-
-## Where to Find Execution Logs
-
-1. Go to your repo on GitHub
-2. Click the **Actions** tab
-3. You'll see a list of all workflow runs with their status:
-   - Green checkmark = success
-   - Red X = failure
-4. Click on any run to see details
-5. Click on the **wakeup** job, then **Ping Claude API** to see the full output
-
-## Schedule Details
-
-- **Current schedule:** 6:05 AM Central Standard Time (CST)
-- **Cron expression:** `5 12 * * *` (12:05 PM UTC)
-
-### Daylight Saving Time
-
-GitHub Actions uses UTC only and doesn't adjust for DST automatically.
-
-| Season | Time Zone | UTC Offset | Local Time |
-|--------|-----------|------------|------------|
-| Winter (Nov-Mar) | CST | UTC-6 | 6:05 AM |
-| Summer (Mar-Nov) | CDT | UTC-5 | 7:05 AM |
-
-**To always run at 6:05 AM local time**, you'll need to update the cron twice a year:
-- **March (start of DST):** Change to `5 11 * * *`
-- **November (end of DST):** Change to `5 12 * * *`
-
-Or just leave it and accept the 1-hour shift during summer.
+Note: GitHub uses UTC, so during Daylight Saving Time (March-November) it will run at 7:05 AM CDT instead. To adjust, edit the cron in `.github/workflows/claude-wakeup.yml`:
+- Winter (CST): `5 12 * * *`
+- Summer (CDT): `5 11 * * *`
 
 ## Troubleshooting
 
-### Workflow not running?
-
-- GitHub Actions cron jobs can be delayed by up to 15-20 minutes during high-demand periods
-- Workflows are disabled after 60 days of repo inactivity. Just visit the Actions tab and re-enable if needed.
-
-### API errors?
-
-- Check that your `ANTHROPIC_API_KEY` secret is set correctly
-- Verify your API key is valid and has available credits
-
-## Cost
-
-- **GitHub Actions:** Free (private repos get 2,000 minutes/month; this uses ~0.1 min/day)
-- **Claude API:** Minimal (a "hi" message costs a fraction of a cent)
+- **Workflow not running?** GitHub cron can be delayed up to 15 min. Also, workflows pause after 60 days of repo inactivity - just re-enable in Actions tab.
+- **API errors?** Verify your `ANTHROPIC_API_KEY` secret is set correctly.
