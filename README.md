@@ -26,17 +26,49 @@ Click the **Fork** button in the top right corner.
 
 That's it. The workflow will now run automatically every day at 6:05 AM Central.
 
+## Changing the Schedule
+
+Edit `.github/workflows/claude-wakeup.yml` and change the cron line:
+
+```yaml
+- cron: '5 12 * * *'
+```
+
+### Cron Format
+
+```
+┌───────── minute (0-59)
+│ ┌─────── hour (0-23) in UTC
+│ │ ┌───── day of month (1-31)
+│ │ │ ┌─── month (1-12)
+│ │ │ │ ┌─ day of week (0-6, Sunday=0)
+│ │ │ │ │
+5 12 * * *  ← "At 12:05 PM UTC, every day"
+```
+
+### Converting to UTC
+
+GitHub Actions uses UTC. To find your UTC time:
+- **US Eastern**: Add 5 hours (EST) or 4 hours (EDT)
+- **US Central**: Add 6 hours (CST) or 5 hours (CDT)
+- **US Pacific**: Add 8 hours (PST) or 7 hours (PDT)
+
+**Example**: To run at 7:30 AM US Eastern (EST):
+- 7:30 AM + 5 hours = 12:30 PM UTC
+- Cron: `30 12 * * *`
+
+### Common Times (US Central)
+
+| Local Time | Winter (CST) | Summer (CDT) |
+|------------|--------------|--------------|
+| 5:00 AM    | `0 11 * * *` | `0 10 * * *` |
+| 6:00 AM    | `0 12 * * *` | `0 11 * * *` |
+| 7:00 AM    | `0 13 * * *` | `0 12 * * *` |
+| 8:00 AM    | `0 14 * * *` | `0 13 * * *` |
+
 ## Viewing Logs
 
 **Actions** tab → Click any workflow run → **wakeup** → **Ping Claude API**
-
-## Schedule
-
-Runs daily at 6:05 AM US Central Time.
-
-Note: GitHub uses UTC, so during Daylight Saving Time (March-November) it will run at 7:05 AM CDT instead. To adjust, edit the cron in `.github/workflows/claude-wakeup.yml`:
-- Winter (CST): `5 12 * * *`
-- Summer (CDT): `5 11 * * *`
 
 ## Troubleshooting
 
