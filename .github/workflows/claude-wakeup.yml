@@ -17,14 +17,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Ping Claude Code (Max Subscription)
-        # Pinned to commit eaa832e (2024-12-19) for supply chain security
-        uses: grll/claude-code-action@eaa832e2642dfd5ecf723e5d99fc72c8f291c9bc
+        # Pinned to commit b3679dd for supply chain security
+        # Using base action directly since it supports workflow_dispatch
+        uses: grll/claude-code-base-action@b3679ddae1203efdad9431c743e29bc2a161e7c5
         with:
+          prompt: "Say hello. This is a wakeup ping to start the daily usage timer."
           use_oauth: "true"
           claude_access_token: ${{ secrets.CLAUDE_ACCESS_TOKEN }}
           claude_refresh_token: ${{ secrets.CLAUDE_REFRESH_TOKEN }}
           claude_expires_at: ${{ secrets.CLAUDE_EXPIRES_AT }}
           secrets_admin_pat: ${{ secrets.SECRETS_ADMIN_PAT }}
-          direct_prompt: "Say hello. This is a wakeup ping to start the daily usage timer."
           timeout_minutes: "2"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
