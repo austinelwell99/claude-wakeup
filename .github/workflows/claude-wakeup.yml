@@ -16,7 +16,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Ping Claude Code (Max Subscription)
+      - name: Ping Claude Code
         # Pinned to commit b3679dd for supply chain security
         # Using base action directly since it supports workflow_dispatch
         uses: grll/claude-code-base-action@b3679ddae1203efdad9431c743e29bc2a161e7c5
