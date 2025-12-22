@@ -4,7 +4,6 @@ on:
   schedule:
     # 6:05 AM US Central Standard Time (UTC-6) = 12:05 PM UTC
     # Note: During Daylight Saving Time (March-November), this will run at 7:05 AM CDT
-    # To run at 6:05 AM CDT instead, change to: '5 11 * * *'
     - cron: '5 12 * * *'
 
   # Allows manual trigger for testing from the Actions tab
@@ -14,31 +13,18 @@ jobs:
   wakeup:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Claude API
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          echo "Starting Claude API ping at $(date -u) UTC"
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-          response=$(curl -s -w "\n%{http_code}" https://api.anthropic.com/v1/messages \
-            -H "Content-Type: application/json" \
-            -H "x-api-key: $ANTHROPIC_API_KEY" \
-            -H "anthropic-version: 2023-06-01" \
-            -d '{
-              "model": "claude-sonnet-4-20250514",
-              "max_tokens": 100,
-              "messages": [{"role": "user", "content": "hi"}]
-            }')
-
-          http_code=$(echo "$response" | tail -n1)
-          body=$(echo "$response" | sed '$d')
-
-          echo "HTTP Status: $http_code"
-          echo "Response: $body"
-
-          if [ "$http_code" -eq 200 ]; then
-            echo "Success! Claude API pinged successfully."
-          else
-            echo "Warning: Received non-200 status code"
-            exit 1
-          fi
+      - name: Ping Claude Code (Max Subscription)
+        # Pinned to commit eaa832e (2024-12-19) for supply chain security
+        uses: grll/claude-code-action@eaa832e2642dfd5ecf723e5d99fc72c8f291c9bc
+        with:
+          use_oauth: "true"
+          claude_access_token: ${{ secrets.CLAUDE_ACCESS_TOKEN }}
+          claude_refresh_token: ${{ secrets.CLAUDE_REFRESH_TOKEN }}
+          claude_expires_at: ${{ secrets.CLAUDE_EXPIRES_AT }}
+          secrets_admin_pat: ${{ secrets.SECRETS_ADMIN_PAT }}
+          direct_prompt: "Say hello. This is a wakeup ping to start the daily usage timer."
+          timeout_minutes: "2"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
