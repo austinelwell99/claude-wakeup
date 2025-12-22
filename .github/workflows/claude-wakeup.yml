@@ -16,7 +16,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Ping Claude Code (Max Subscription)
+      - name: Ping Claude Code
         # Pinned to commit eaa832e (2024-12-19) for supply chain security
         uses: grll/claude-code-action@eaa832e2642dfd5ecf723e5d99fc72c8f291c9bc
         with:
