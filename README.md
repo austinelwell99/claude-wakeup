@@ -1,6 +1,6 @@
 # Claude Wakeup
 
-Automatically pings Claude Code at 6:05 AM Central Time daily to start your 5-hour usage window early. Uses your Claude Max subscription (not API credits).
+Automatically pings Claude Code at 6:05 AM Central Time daily to start your 5-hour usage window early. Uses your Claude subscription (not API credits).
 
 ## Setup
 
@@ -64,14 +64,14 @@ Add these 4 secrets:
 3. Click **Run workflow** → **Run workflow**
 4. Wait for completion and verify it succeeded
 
-The workflow will now run automatically every day at 6:05 AM Central and count against your Claude Max 5-hour usage window.
+The workflow will now run automatically every day at 6:05 AM Central and count against your Claude 5-hour usage window.
 
 ## How It Works
 
 This uses the [grll/claude-code-action](https://github.com/grll/claude-code-action) fork which:
-- Authenticates using your Claude Max OAuth tokens
+- Authenticates using your Claude OAuth tokens
 - Automatically refreshes expired tokens (using your PAT to update secrets)
-- Runs a minimal Claude Code interaction that counts against your Max subscription
+- Runs a minimal Claude Code interaction that counts against your subscription
 
 ## Changing the Schedule
 
