@@ -26,21 +26,31 @@ The action needs a PAT with `secrets:write` permission to auto-refresh expired O
 
 Run this command on your local machine (where you're logged into Claude Code):
 
+**macOS**:
+```bash
+security find-generic-password -s "Claude Code-credentials" -w | python3 -c "
+import json, sys
+d = json.load(sys.stdin)['claudeAiOauth']
+print('CLAUDE_ACCESS_TOKEN:', d['accessToken'])
+print()
+print('CLAUDE_REFRESH_TOKEN:', d['refreshToken'])
+print()
+print('CLAUDE_EXPIRES_AT:', d['expiresAt'])
+"
+```
+
+These stored tokens may be expired if using macOS with keychain as keychain manages the updated tokens, so you may have to run `/login` again.
+
+**Linux**:
 ```bash
 cat ~/.claude/.credentials.json | python3 -c "
 import json, sys
 d = json.load(sys.stdin)['claudeAiOauth']
-print('CLAUDE_ACCESS_TOKEN:', d['accessToken'][:50] + '...')
-print('CLAUDE_REFRESH_TOKEN:', d['refreshToken'][:50] + '...')
-print('CLAUDE_EXPIRES_AT:', d['expiresAt'])
+print('CLAUDE_ACCESS_TOKEN:', d['accessToken'])
 print()
-print('Full values for GitHub Secrets:')
-print('---')
-print('accessToken:', d['accessToken'])
-print('---')
-print('refreshToken:', d['refreshToken'])
-print('---')
-print('expiresAt:', d['expiresAt'])
+print('CLAUDE_REFRESH_TOKEN:', d['refreshToken'])
+print()
+print('CLAUDE_EXPIRES_AT:', d['expiresAt'])
 "
 ```
 
