@@ -20,6 +20,7 @@ jobs:
         # Pinned to commit b3679dd for supply chain security
         # Using base action directly since it supports workflow_dispatch
         uses: grll/claude-code-base-action@b3679ddae1203efdad9431c743e29bc2a161e7c5
+        continue-on-error: true  # Ignore version check failures - timer still triggers
         with:
           prompt: "Say hello. This is a wakeup ping to start the daily usage timer."
           use_oauth: "true"
